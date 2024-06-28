@@ -1,0 +1,94 @@
+﻿@model Purchase
+@{
+    ViewData["Title"] = "Invoice";
+}
+
+<style>
+    .invoiceForm {
+        background-color: #198754;
+        border: 1px solid #bbbbbb;
+        border-radius: 10px;
+        padding: 2px;
+        box-shadow: 2px 2px 10px 1px #cbcbcb;
+    }
+    .invoiceForm form {
+        background-color: #FFF;
+        border-radius: 7px;
+        padding: 20px;
+    }
+</style>
+
+<div class="invoiceForm">
+    <div class="text-center pb-2 text-white">
+        <h1 class="display-4">INVOICE</h1>
+    </div>
+
+    <form asp-action="Create" asp-controller="Home" method="post">
+        <input type="hidden" asp-for="PurchaseId" />
+        <input type="hidden" asp-for="InvoiceId" />
+
+        <div id="invoiceContainer">
+            <div class="d-flex align-items-end justify-content-end">
+                <a class="btn btn-danger" id="addNewInvoiceRow">+ ADD</a>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label class="form-label" asp-for="ProductName"></label>
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="Quantity"></label>
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="Price"></label>
+                </div>
+            </div>
+            <div class="invoiceRow">
+                <div class="row mt-2">
+                    <div class="col-6">
+                        <input class="form-control" asp-for="ProductName" name="Purchases[0].ProductName"  />
+                    </div>
+                    <div class="col-3">
+                        <select class="form-select" asp-for="Quantity" name="Purchases[0].Quantity">
+                            <option value="">-- Select Quantity --</option>
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Price" name="Purchases[0].Price" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="btn btn-success mt-3 w-100" type="submit">SUBMIT</button>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            let index = 1;
+
+            $('#addNewInvoiceRow').on('click', function () {
+                var clonedRow = $('.invoiceRow').first().clone();
+
+                clonedRow.find('input').val('');
+                clonedRow.find('select').val('');
+
+                clonedRow.find('input, select').each(function () {
+                    var name = $(this).attr('name');
+                    if (name) {
+                        var newName = name.replace(/\[0\]/, '[' + index + ']');
+                        $(this).attr('name', newName);
+                    }
+                });
+
+                $('#invoiceContainer').append(clonedRow);
+                index++;
+            });
+        })
+    </script>
+}
